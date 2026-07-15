@@ -120,6 +120,9 @@ function App() {
                 console.error('OAuth callback error:', error);
             } finally {
                 cleanupUrl(window.location.origin);
+                if (window.location.pathname === '/') {
+                    window.history.replaceState({}, '', '/bot');
+                }
             }
         };
 

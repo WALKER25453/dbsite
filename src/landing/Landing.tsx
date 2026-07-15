@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { generateOAuthURL } from '@/components/shared';
 import AnimatedBackground from './AnimatedBackground';
 import './landing.scss';
 
@@ -192,6 +193,29 @@ const FAQS = [
 function Navbar() {
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [authLoading, setAuthLoading] = useState(false);
+
+    const handleLogin = useCallback(async () => {
+        try {
+            setAuthLoading(true);
+            const oauthUrl = await generateOAuthURL();
+            if (oauthUrl) window.location.replace(oauthUrl);
+            else setAuthLoading(false);
+        } catch {
+            setAuthLoading(false);
+        }
+    }, []);
+
+    const handleSignup = useCallback(async () => {
+        try {
+            setAuthLoading(true);
+            const oauthUrl = await generateOAuthURL('registration');
+            if (oauthUrl) window.location.replace(oauthUrl);
+            else setAuthLoading(false);
+        } catch {
+            setAuthLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20);
@@ -214,12 +238,12 @@ function Navbar() {
                     ))}
                 </ul>
                 <div className='ln-nav__cta'>
-                    <Link to='/bot' className='ln-btn ln-btn--ghost ln-btn--sm'>
-                        Log in
-                    </Link>
-                    <Link to='/bot' className='ln-btn ln-btn--primary ln-btn--sm'>
-                        Launch Bot
-                    </Link>
+                    <button onClick={handleLogin} disabled={authLoading} className='ln-btn ln-btn--ghost ln-btn--sm'>
+                        {authLoading ? 'Loading…' : 'Login'}
+                    </button>
+                    <button onClick={handleSignup} disabled={authLoading} className='ln-btn ln-btn--primary ln-btn--sm'>
+                        Sign up
+                    </button>
                     <button className='ln-nav__burger' onClick={() => setOpen(!open)} aria-label='Menu'>
                         <svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
                             {open ? (
@@ -241,15 +265,42 @@ function Navbar() {
                         {l.label}
                     </a>
                 ))}
-                <Link to='/bot' onClick={() => setOpen(false)}>
-                    Launch Bot
-                </Link>
+                <button onClick={() => { setOpen(false); handleLogin(); }} className='ln-btn ln-btn--ghost' style={{ marginTop: 8 }}>
+                    Login
+                </button>
+                <button onClick={() => { setOpen(false); handleSignup(); }} className='ln-btn ln-btn--primary'>
+                    Sign up
+                </button>
             </div>
         </nav>
     );
 }
 
 function Hero() {
+    const [authLoading, setAuthLoading] = useState(false);
+
+    const handleLogin = useCallback(async () => {
+        try {
+            setAuthLoading(true);
+            const oauthUrl = await generateOAuthURL();
+            if (oauthUrl) window.location.replace(oauthUrl);
+            else setAuthLoading(false);
+        } catch {
+            setAuthLoading(false);
+        }
+    }, []);
+
+    const handleSignup = useCallback(async () => {
+        try {
+            setAuthLoading(true);
+            const oauthUrl = await generateOAuthURL('registration');
+            if (oauthUrl) window.location.replace(oauthUrl);
+            else setAuthLoading(false);
+        } catch {
+            setAuthLoading(false);
+        }
+    }, []);
+
     return (
         <section className='ln-hero'>
             <div className='ln-container ln-hero__inner'>
@@ -261,22 +312,30 @@ function Hero() {
                         AI-Powered Deriv Trading
                     </span>
                     <h1 className='ln-hero__title'>
-                        Trade smarter with <span className='ln-grad-text'>AI-driven</span> automation
+                        Trade Smart with <span className='ln-grad-text'>Ai</span>
                     </h1>
                     <p className='ln-hero__desc'>
-                        NexaBot turns the Deriv API into a premium, no-code trading experience. Build, backtest, and deploy
-                        automated strategies in minutes — supercharged by an AI copilot that writes your bot logic for you.
+                        Professional Ai tools for Deriv traders. Build, backtest, and deploy automated trading
+                        strategies — supercharged by an AI copilot that writes your bot logic for you.
                     </p>
                     <div className='ln-hero__actions'>
-                        <Link to='/bot' className='ln-btn ln-btn--primary'>
-                            Launch the Bot Builder
-                            <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-                                <path d='M5 12h14M13 6l6 6-6 6' strokeLinecap='round' strokeLinejoin='round' />
-                            </svg>
-                        </Link>
-                        <a href='#features' className='ln-btn ln-btn--ghost'>
-                            Explore features
-                        </a>
+                        <button onClick={handleLogin} disabled={authLoading} className='ln-btn ln-btn--primary'>
+                            {authLoading ? (
+                                <span className='ln-spinner' />
+                            ) : (
+                                <>
+                                    Login
+                                    <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+                                        <path d='M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4' strokeLinecap='round' strokeLinejoin='round' />
+                                        <path d='M10 17l5-5-5-5' strokeLinecap='round' strokeLinejoin='round' />
+                                        <path d='M15 12H3' strokeLinecap='round' strokeLinejoin='round' />
+                                    </svg>
+                                </>
+                            )}
+                        </button>
+                        <button onClick={handleSignup} disabled={authLoading} className='ln-btn ln-btn--ghost'>
+                            {authLoading ? 'Loading…' : 'Sign up'}
+                        </button>
                     </div>
                     <div className='ln-hero__meta'>
                         <div className='ln-hero__meta-item'>
@@ -481,6 +540,18 @@ function StatsBand() {
 }
 
 function Pricing() {
+    const [authLoading, setAuthLoading] = useState(false);
+    const handleAuth = useCallback(async (isSignup?: boolean) => {
+        try {
+            setAuthLoading(true);
+            const oauthUrl = await generateOAuthURL(isSignup ? 'registration' : undefined);
+            if (oauthUrl) window.location.replace(oauthUrl);
+            else setAuthLoading(false);
+        } catch {
+            setAuthLoading(false);
+        }
+    }, []);
+
     return (
         <section className='ln-section' id='pricing'>
             <div className='ln-container'>
@@ -510,12 +581,13 @@ function Pricing() {
                                         </li>
                                     ))}
                                 </ul>
-                                <Link
-                                    to='/bot'
+                                <button
+                                    onClick={() => handleAuth(p.price === '$0')}
+                                    disabled={authLoading}
                                     className={`ln-btn ${p.featured ? 'ln-btn--primary' : 'ln-btn--ghost'}`}
                                 >
-                                    {p.price === '$0' ? 'Start free' : 'Get started'}
-                                </Link>
+                                    {authLoading ? 'Loading…' : p.price === '$0' ? 'Start free' : 'Get started'}
+                                </button>
                             </div>
                         </Reveal>
                     ))}
@@ -589,6 +661,18 @@ function FAQ() {
 }
 
 function CTABand() {
+    const [authLoading, setAuthLoading] = useState(false);
+    const handleLogin = useCallback(async () => {
+        try {
+            setAuthLoading(true);
+            const oauthUrl = await generateOAuthURL();
+            if (oauthUrl) window.location.replace(oauthUrl);
+            else setAuthLoading(false);
+        } catch {
+            setAuthLoading(false);
+        }
+    }, []);
+
     return (
         <section className='ln-section' style={{ paddingTop: 0 }}>
             <div className='ln-container'>
@@ -598,15 +682,15 @@ function CTABand() {
                             Ready to automate your <span className='ln-grad-text'>trading edge?</span>
                         </h2>
                         <p className='ln-cta-band__sub'>
-                            Launch the bot builder now and deploy your first AI-assisted strategy in under five minutes.
+                            Log in with your Deriv account and deploy your first AI-assisted strategy in under five minutes.
                         </p>
                         <div className='ln-cta-band__actions'>
-                            <Link to='/bot' className='ln-btn ln-btn--primary'>
-                                Launch the Bot Builder
+                            <button onClick={handleLogin} disabled={authLoading} className='ln-btn ln-btn--primary'>
+                                {authLoading ? 'Loading…' : 'Login with Deriv'}
                                 <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
                                     <path d='M5 12h14M13 6l6 6-6 6' strokeLinecap='round' strokeLinejoin='round' />
                                 </svg>
-                            </Link>
+                            </button>
                             <a href='#pricing' className='ln-btn ln-btn--ghost'>
                                 View pricing
                             </a>
@@ -639,7 +723,6 @@ function Footer() {
                             <li><a href='#features'>Features</a></li>
                             <li><a href='#ai'>AI Copilot</a></li>
                             <li><a href='#pricing'>Pricing</a></li>
-                            <li><Link to='/bot'>Bot Builder</Link></li>
                         </ul>
                     </div>
                     <div className='ln-footer__col'>

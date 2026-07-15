@@ -21,7 +21,7 @@ import Audio from '../components/audio';
 import BlocklyLoading from '../components/blockly-loading';
 import BotStopped from '../components/bot-stopped';
 import BotBuilder from '../pages/bot-builder';
-import Main from '../pages/main';
+import NexaDashboard from '../pages/nexa-dashboard/NexaDashboard';
 import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import '../components/bot-notification/bot-notification.scss';
@@ -196,7 +196,7 @@ const AppContent = observer(() => {
                         <BlocklyLoading />
                         <div className='bot-dashboard bot' data-testid='dt_bot_dashboard'>
                             <Audio />
-                            <Main />
+                            <NexaDashboard />
                             <BotBuilder />
                             <BotStopped />
                             <TransactionDetailsModal />
