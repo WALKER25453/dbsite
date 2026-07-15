@@ -16,6 +16,7 @@ import './app-root.scss';
 
 const Layout = lazy(() => import('../components/layout'));
 const AppRoot = lazy(() => import('./app-root'));
+const Landing = lazy(() => import('../landing/Landing'));
 
 /**
  * Component wrapper to handle language URL parameter
@@ -33,32 +34,44 @@ const routerBasename = isPreviewMode() ? PREVIEW_BASE_PATH : undefined;
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route
-            path='/'
-            element={
-                <Suspense
-                    fallback={<ChunkLoader message={localize('Please wait while we connect to the server...')} />}
-                >
-                    <TranslationProvider defaultLang='EN' i18nInstance={i18nInstance}>
-                        <LanguageHandler>
-                            <StoreProvider>
-                                <LocalStorageSyncWrapper>
-                                    <RoutePromptDialog />
-                                    <CoreStoreProvider>
-                                        <Layout />
-                                    </CoreStoreProvider>
-                                </LocalStorageSyncWrapper>
-                            </StoreProvider>
-                        </LanguageHandler>
-                    </TranslationProvider>
-                </Suspense>
-            }
-        >
-            {/* All child routes will be passed as children to Layout */}
-            <Route index element={<AppRoot />} />
-            {/* App Builder embeds the template at /preview — render the same app shell */}
-            <Route path='preview' element={<AppRoot />} />
-        </Route>
+        <>
+            <Route
+                path='/'
+                element={
+                    <Suspense
+                        fallback={<ChunkLoader message={localize('Please wait while we connect to the server...')} />}
+                    >
+                        <TranslationProvider defaultLang='EN' i18nInstance={i18nInstance}>
+                            <Landing />
+                        </TranslationProvider>
+                    </Suspense>
+                }
+            />
+            <Route
+                path='/bot'
+                element={
+                    <Suspense
+                        fallback={<ChunkLoader message={localize('Please wait while we connect to the server...')} />}
+                    >
+                        <TranslationProvider defaultLang='EN' i18nInstance={i18nInstance}>
+                            <LanguageHandler>
+                                <StoreProvider>
+                                    <LocalStorageSyncWrapper>
+                                        <RoutePromptDialog />
+                                        <CoreStoreProvider>
+                                            <Layout />
+                                        </CoreStoreProvider>
+                                    </LocalStorageSyncWrapper>
+                                </StoreProvider>
+                            </LanguageHandler>
+                        </TranslationProvider>
+                    </Suspense>
+                }
+            >
+                <Route index element={<AppRoot />} />
+                <Route path='preview' element={<AppRoot />} />
+            </Route>
+        </>
     ),
     { basename: routerBasename }
 );

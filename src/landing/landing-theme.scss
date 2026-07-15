@@ -1,0 +1,42 @@
+@use 'sass:color';
+
+// ===== Landing Page Theme — Neon Dark / Glassmorphism =====
+// Scoped variables for the marketing landing page. Does not touch the bot's
+// existing theme tokens, so the trading app keeps its own light/dark system.
+
+:root {
+    --ln-bg: #05060f;
+    --ln-bg-2: #0a0b1e;
+    --ln-surface: rgba(20, 24, 48, 0.55);
+    --ln-surface-2: rgba(28, 33, 64, 0.7);
+    --ln-border: rgba(140, 160, 255, 0.14);
+    --ln-border-strong: rgba(150, 170, 255, 0.28);
+
+    --ln-text: #eef1ff;
+    --ln-text-muted: #9aa3c7;
+    --ln-text-dim: #6b7399;
+
+    --ln-neon-blue: #3b82f6;
+    --ln-neon-blue-2: #60a5fa;
+    --ln-neon-purple: #8b5cf6;
+    --ln-neon-purple-2: #a78bfa;
+    --ln-neon-cyan: #22d3ee;
+
+    --ln-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    --ln-gradient-cyan: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+    --ln-gradient-soft: linear-gradient(135deg, rgba(59, 130, 246, 0.18) 0%, rgba(139, 92, 246, 0.18) 100%);
+
+    --ln-glow-blue: 0 0 40px rgba(59, 130, 246, 0.35);
+    --ln-glow-purple: 0 0 40px rgba(139, 92, 246, 0.35);
+
+    --ln-radius: 20px;
+    --ln-radius-sm: 12px;
+    --ln-radius-lg: 28px;
+
+    --ln-shadow-card: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+    --ln-shadow-glow: 0 0 0 1px var(--ln-border), 0 24px 60px -20px rgba(59, 130, 246, 0.25);
+
+    --ln-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --ln-font-display: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
+    --ln-font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
